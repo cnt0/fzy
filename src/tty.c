@@ -9,9 +9,9 @@
 #include <signal.h>
 #include <errno.h>
 
-#include "tty.h"
+#include "fzy/tty.h"
 
-#include "../config.h"
+#include "fzy/config.h"
 
 void tty_reset(tty_t *tty) {
 	tcsetattr(tty->fdin, TCSANOW, &tty->original_termios);

@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "options.h"
+#include "fzy/options.h"
 
-#include "../config.h"
+#include "fzy/config.h"
 
 static const char *usage_str =
     ""

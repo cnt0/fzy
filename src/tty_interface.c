@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "match.h"
-#include "tty_interface.h"
-#include "../config.h"
+#include "fzy/match.h"
+#include "fzy/tty_interface.h"
+#include "fzy/config.h"
 
 static int isprint_unicode(char c) {
 	return isprint(c) || c & (1 << 7);

@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "options.h"
-#include "choices.h"
-#include "match.h"
+#include "fzy/options.h"
+#include "fzy/choices.h"
+#include "fzy/match.h"
 
 /* Initial size of buffer for storing input in memory */
 #define INITIAL_BUFFER_CAPACITY 4096

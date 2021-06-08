@@ -1,10 +1,12 @@
 VERSION=1.0
 
 CPPFLAGS=-DVERSION=\"${VERSION}\" -D_GNU_SOURCE
-CFLAGS+=-MD -Wall -Wextra -g -std=c99 -O3 -pedantic -Ideps -Werror=vla
+CFLAGS+=-MD -Wall -Wextra -g -std=c99 -O3 -pedantic -fPIC -Ideps -Iinclude -Werror=vla
 PREFIX?=/usr/local
 MANDIR?=$(PREFIX)/share/man
 BINDIR?=$(PREFIX)/bin
+LIBDIR?=$(PREFIX)/lib
+INCLUDEDIR?=$(PREFIX)/include/fzy
 DEBUGGER?=
 
 INSTALL=install
@@ -28,19 +30,27 @@ test: check
 check: test/fzytest
 	$(DEBUGGER) ./test/fzytest
 
-fzy: $(OBJECTS)
-	$(CC) $(CFLAGS) $(CCFLAGS) -o $@ $(OBJECTS) $(LIBS)
+libfzy.so: $(OBJECTS)
+	$(CC) $(CFLAGS) -shared -o $@ $(OBJECTS) $(LIBS)
 
-%.o: %.c config.h
+fzy: libfzy.so
+	$(CC) $(CFLAGS) $(CCFLAGS) -L. -o $@ src/fzy.o -lfzy
+
+%.o: %.c include/fzy/config.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-config.h: src/config.def.h
-	cp src/config.def.h config.h
+include/fzy/config.h: config.def.h
+	cp config.def.h include/fzy/config.h
 
 install: fzy
 	mkdir -p $(DESTDIR)$(BINDIR)
 	cp fzy $(DESTDIR)$(BINDIR)/
 	chmod 755 ${DESTDIR}${BINDIR}/fzy
+	mkdir -p $(DESTDIR)$(LIBDIR)
+	cp libfzy.so $(DESTDIR)$(LIBDIR)/
+	chmod 777 ${DESTDIR}${LIBDIR}/libfzy.so
+	mkdir -p $(DESTDIR)$(INCLUDEDIR)
+	cp -r include/fzy/* $(DESTDIR)$(INCLUDEDIR)/
 	mkdir -p $(DESTDIR)$(MANDIR)/man1
 	cp fzy.1 $(DESTDIR)$(MANDIR)/man1/
 	chmod 644 ${DESTDIR}${MANDIR}/man1/fzy.1

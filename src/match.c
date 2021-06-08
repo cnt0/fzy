@@ -6,10 +6,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "match.h"
-#include "bonus.h"
+#include "fzy/match.h"
+#include "fzy/bonus.h"
 
-#include "../config.h"
+#include "fzy/config.h"
 
 char *strcasechr(const char *s, char c) {
 	const char accept[3] = {c, toupper(c), 0};

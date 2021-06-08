@@ -5,13 +5,13 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include "match.h"
-#include "tty.h"
-#include "choices.h"
-#include "options.h"
-#include "tty_interface.h"
+#include "fzy/match.h"
+#include "fzy/tty.h"
+#include "fzy/choices.h"
+#include "fzy/options.h"
+#include "fzy/tty_interface.h"
 
-#include "../config.h"
+#include "fzy/config.h"
 
 int main(int argc, char *argv[]) {
 	int ret = 0;

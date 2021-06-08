@@ -4,7 +4,7 @@
 #include "greatest/greatest.h"
 #include "theft/theft.h"
 
-#include "match.h"
+#include "fzy/match.h"
 
 static void *string_alloc_cb(struct theft *t, theft_hash seed, void *env) {
 	(void)env;

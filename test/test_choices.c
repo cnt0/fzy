@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../config.h"
-#include "options.h"
-#include "choices.h"
+#include "fzy/config.h"
+#include "fzy/options.h"
+#include "fzy/choices.h"
 
 #include "greatest/greatest.h"
 

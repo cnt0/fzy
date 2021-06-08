@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include "../config.h"
-#include "match.h"
+#include "fzy/config.h"
+#include "fzy/match.h"
 
 #include "greatest/greatest.h"
 
