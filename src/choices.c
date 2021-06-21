@@ -15,6 +15,48 @@
 /* Initial size of choices array */
 #define INITIAL_CHOICE_CAPACITY 128
 
+#if !defined(_BSD_SOURCE) && !defined(__APPLE_CC__)
+
+static void merge(void *begin, void *mid, void *end, void *buf, size_t size, int (*compar)(const void *, const void *)) {
+    size_t nmemb = ((char *)end - (char *)begin) / size;
+
+    char *cl = begin;
+    char *cr = mid;
+    size_t idx;
+    for (idx = 0; idx < nmemb; idx += size) {
+       if (cl < (char *)mid && (cr == end || compar(cl, cr) <= 0)) {
+           strncpy((char *)buf + idx * size, cl, size);
+           cl += size;
+       } else {
+           strncpy((char *)buf + idx * size, cr, size);
+           cr += size;
+       }
+    }
+    strncpy(begin, buf, nmemb * size);
+} 
+
+static void mergesort_impl(void *begin, void *end, void *buf, size_t size, int (*compar)(const void *, const void *)) {
+    if ((char *)begin + size <= (char *)end) {
+        return;
+    }
+    size_t nmemb = ((char *)end - (char *)begin) / size;
+    void *mid = (char *)begin + size * nmemb / 2;
+    mergesort_impl(begin, mid, buf, size, compar);
+    mergesort_impl(mid, end, (char *)buf + size * nmemb / 2, size, compar);
+    merge(begin, mid, end, buf, size, compar);
+}
+
+static int mergesort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *)) {
+    char *buf = malloc(nmemb * size);
+    if (buf == NULL) {
+        return -1;
+    }
+    mergesort_impl(base, (char *)base + nmemb * size, buf, size, compar);
+    return 0;
+} 
+
+#endif
+
 static int cmpchoice(const void *_idx1, const void *_idx2) {
 	const struct scored_result *a = _idx1;
 	const struct scored_result *b = _idx2;
@@ -239,7 +281,7 @@ static void *choices_search_worker(void *data) {
 	}
 
 	/* Sort the partial result */
-	qsort(result->list, result->size, sizeof(struct scored_result), cmpchoice);
+	mergesort(result->list, result->size, sizeof(struct scored_result), cmpchoice);
 
 	/* Fan-in, merging results */
 	for(unsigned int step = 0;; step++) {
